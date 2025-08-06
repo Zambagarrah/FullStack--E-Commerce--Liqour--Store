@@ -88,12 +88,12 @@ export default function KiokoEnterpriseLandingPage() {
   ];
 
   // Helper function to get default size options
-  const getDefaultSizeOptions = (basePrice: number): SizeOption[] => [
-    { ml: 250, price: basePrice * 0.7, label: '250ml' },
-    { ml: 500, price: basePrice, label: '500ml' },
-    { ml: 750, price: basePrice * 1.4, label: '750ml' },
-    { ml: 1000, price: basePrice * 1.8, label: '1L' }
-  ];
+  // const getDefaultSizeOptions = (basePrice: number): SizeOption[] => [
+  //   { ml: 250, price: basePrice * 0.7, label: '250ml' },
+  //   { ml: 500, price: basePrice, label: '500ml' },
+  //   { ml: 750, price: basePrice * 1.4, label: '750ml' },
+  //   { ml: 1000, price: basePrice * 1.8, label: '1L' }
+  // ];
 
   // Add to cart function
   const addToCart = (productId: string, selectedSize: number = 500, quantity: number = 1) => {
@@ -130,64 +130,64 @@ export default function KiokoEnterpriseLandingPage() {
   };
 
   // Update quantity function
-  const updateQuantity = (productId: string, sizeML: number, newQuantity: number) => {
-    if (newQuantity <= 0) {
-      removeFromCart(productId, sizeML);
-      return;
-    }
+  // const updateQuantity = (productId: string, sizeML: number, newQuantity: number) => {
+  //   if (newQuantity <= 0) {
+  //     removeFromCart(productId, sizeML);
+  //     return;
+  //   }
     
-    setCart(prevCart => {
-      const newCart = { ...prevCart };
-      if (newCart[productId]) {
-        const itemIndex = newCart[productId].findIndex(item => item.selectedSize === sizeML);
-        if (itemIndex >= 0) {
-          newCart[productId][itemIndex].quantity = newQuantity;
-        }
-      }
-      return newCart;
-    });
-  };
+  //   setCart(prevCart => {
+  //     const newCart = { ...prevCart };
+  //     if (newCart[productId]) {
+  //       const itemIndex = newCart[productId].findIndex(item => item.selectedSize === sizeML);
+  //       if (itemIndex >= 0) {
+  //         newCart[productId][itemIndex].quantity = newQuantity;
+  //       }
+  //     }
+  //     return newCart;
+  //   });
+  // };
 
   // Remove from cart function
-  const removeFromCart = (productId: string, sizeML: number) => {
-    setCart(prevCart => {
-      const newCart = { ...prevCart };
-      if (newCart[productId]) {
-        newCart[productId] = newCart[productId].filter(item => item.selectedSize !== sizeML);
-        if (newCart[productId].length === 0) {
-          delete newCart[productId];
-        }
-      }
-      return newCart;
-    });
-  };
+  // const removeFromCart = (productId: string, sizeML: number) => {
+  //   setCart(prevCart => {
+  //     const newCart = { ...prevCart };
+  //     if (newCart[productId]) {
+  //       newCart[productId] = newCart[productId].filter(item => item.selectedSize !== sizeML);
+  //       if (newCart[productId].length === 0) {
+  //         delete newCart[productId];
+  //       }
+  //     }
+  //     return newCart;
+  //   });
+  // };
 
   // Update size function
-  const updateSize = (productId: string, oldSizeML: number, newSizeML: number) => {
-    setCart(prevCart => {
-      const newCart = { ...prevCart };
-      if (newCart[productId]) {
-        const itemIndex = newCart[productId].findIndex(item => item.selectedSize === oldSizeML);
-        if (itemIndex >= 0) {
-          const quantity = newCart[productId][itemIndex].quantity;
-          // Remove old size
-          newCart[productId].splice(itemIndex, 1);
-          // Add new size
-          const existingNewSizeIndex = newCart[productId].findIndex(item => item.selectedSize === newSizeML);
-          if (existingNewSizeIndex >= 0) {
-            newCart[productId][existingNewSizeIndex].quantity += quantity;
-          } else {
-            newCart[productId].push({
-              productId,
-              selectedSize: newSizeML,
-              quantity
-            });
-          }
-        }
-      }
-      return newCart;
-    });
-  };
+  // const updateSize = (productId: string, oldSizeML: number, newSizeML: number) => {
+  //   setCart(prevCart => {
+  //     const newCart = { ...prevCart };
+  //     if (newCart[productId]) {
+  //       const itemIndex = newCart[productId].findIndex(item => item.selectedSize === oldSizeML);
+  //       if (itemIndex >= 0) {
+  //         const quantity = newCart[productId][itemIndex].quantity;
+  //         // Remove old size
+  //         newCart[productId].splice(itemIndex, 1);
+  //         // Add new size
+  //         const existingNewSizeIndex = newCart[productId].findIndex(item => item.selectedSize === newSizeML);
+  //         if (existingNewSizeIndex >= 0) {
+  //           newCart[productId][existingNewSizeIndex].quantity += quantity;
+  //         } else {
+  //           newCart[productId].push({
+  //             productId,
+  //             selectedSize: newSizeML,
+  //             quantity
+  //           });
+  //         }
+  //       }
+  //     }
+  //     return newCart;
+  //   });
+  // };
 
   // Calculate cart total items
   const getTotalCartItems = () => {

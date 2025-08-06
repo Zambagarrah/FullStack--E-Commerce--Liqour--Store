@@ -19,19 +19,12 @@ interface Product {
   sizeOptions?: SizeOption[]; // optional size variants
 }
 
-// Updated cart item interface to include selected size
-interface CartItem {
-  productId: string;
-  selectedSize: number; // ML size
-  quantity: number;
-}
-
 interface CartProps {
-  cart: {[key: string]: CartItem[]};
+  cart: {[key: string]: number}; // Simple structure: productId -> quantity
   products: Product[];
-  updateQuantity: (productId: string, sizeML: number, newQuantity: number) => void;
-  removeFromCart: (productId: string, sizeML: number) => void;
-  updateSize: (productId: string, oldSizeML: number, newSizeML: number) => void;
+  updateQuantity: (productId: string, newQuantity: number) => void;
+  removeFromCart: (productId: string) => void;
+  updateSize?: (productId: string, oldSizeML: number, newSizeML: number) => void; // Optional for simple implementation
 }
 
 const Cart: React.FC<CartProps> = ({ 
@@ -58,27 +51,27 @@ const Cart: React.FC<CartProps> = ({
     { ml: 1000, price: basePrice * 1.8, label: '1L' }
   ];
 
-  // Flatten cart items with product details
-  const cartItems = Object.entries(cart || {}).flatMap(([productId, items]) => {
+  // Flatten cart items with product details (simplified for basic cart structure)
+  const cartItems = Object.entries(cart || {}).map(([productId, quantity]) => {
     const product = products.find(p => p.id === productId);
     
-    if (!product || !items || !Array.isArray(items)) {
-      return [];
+    if (!product || quantity <= 0) {
+      return null;
     }
     
     const sizeOptions = product.sizeOptions || getDefaultSizeOptions(product.price);
+    const defaultSize = sizeOptions[1]; // Use 500ml as default
     
-    return items.map(item => {
-      const selectedSizeOption = sizeOptions.find(size => size.ml === item.selectedSize);
-      return {
-        ...product,
-        ...item,
-        selectedSizeOption: selectedSizeOption || sizeOptions[0],
-        sizeOptions,
-        cartKey: `${productId}-${item.selectedSize}`
-      };
-    });
-  });
+    return {
+      ...product,
+      productId,
+      selectedSize: defaultSize.ml,
+      quantity,
+      selectedSizeOption: defaultSize,
+      sizeOptions,
+      cartKey: `${productId}-${defaultSize.ml}`
+    };
+  }).filter((item): item is NonNullable<typeof item> => item !== null);
 
   console.log('Final cart items:', cartItems);
 
@@ -97,9 +90,11 @@ const Cart: React.FC<CartProps> = ({
     }));
   };
 
-  // Handle size change
+  // Handle size change (disabled for simplified cart)
   const handleSizeChange = (productId: string, oldSizeML: number, newSizeML: number) => {
-    updateSize(productId, oldSizeML, newSizeML);
+    if (updateSize) {
+      updateSize(productId, oldSizeML, newSizeML);
+    }
     setOpenDropdowns(prev => ({
       ...prev,
       [`${productId}-${oldSizeML}`]: false
@@ -204,14 +199,14 @@ const Cart: React.FC<CartProps> = ({
                       <div className="mt-4 flex justify-between items-center">
                         <div className="flex items-center border border-gray-300 rounded-md">
                           <button 
-                            onClick={() => updateQuantity(item.productId, item.selectedSize, Math.max(1, item.quantity - 1))}
+                            onClick={() => updateQuantity(item.productId, Math.max(1, item.quantity - 1))}
                             className="p-2 text-gray-600 hover:text-amber-600"
                           >
                             <Minus className="h-4 w-4" />
                           </button>
                           <span className="px-4 py-2 text-gray-900">{item.quantity}</span>
                           <button 
-                            onClick={() => updateQuantity(item.productId, item.selectedSize, item.quantity + 1)}
+                            onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                             className="p-2 text-gray-600 hover:text-amber-600"
                           >
                             <Plus className="h-4 w-4" />
@@ -219,7 +214,7 @@ const Cart: React.FC<CartProps> = ({
                         </div>
                         
                         <button 
-                          onClick={() => removeFromCart(item.productId, item.selectedSize)}
+                          onClick={() => removeFromCart(item.productId)}
                           className="text-gray-500 hover:text-red-500"
                           title="Remove item"
                         >

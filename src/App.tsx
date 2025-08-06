@@ -363,10 +363,11 @@ function App() {
               <Route path="/cart" element={
                  
                 <Cart 
-                  cart ={cart} 
+                  cart={cart} 
                   products={productsWithFormattedPrices} 
-                  updateCartQuantity={updateCartQuantity} 
+                  updateQuantity={updateCartQuantity} 
                   removeFromCart={removeFromCart} 
+                  updateSize={() => {}} 
                 />
               } />
               <Route path="/debug-styles" element={<DebugStyles />} />

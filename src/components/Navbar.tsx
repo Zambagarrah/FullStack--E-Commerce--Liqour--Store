@@ -66,7 +66,7 @@ const Navbar: React.FC<NavbarProps> = ({ cartItemCount = 0, onSearch }) => {
 
   // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = () => {
       if (isShopDropdownOpen) {
         setIsShopDropdownOpen(false);
       }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+// import { useLocation } from 'react-router-dom';
 
 
 interface Product {
@@ -22,8 +22,8 @@ interface ShopProps {
 const Shop: React.FC<ShopProps> = ({ products, addToCart }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'all');
-const location = useLocation();
-const searchQuery = searchParams.get('search')
+// const location = useLocation();
+// const searchQuery = searchParams.get('search')
 
 
 
